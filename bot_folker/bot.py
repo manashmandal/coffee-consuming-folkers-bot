@@ -45,10 +45,13 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not (update.message and update.message.text):
         return
 
-    print("UPDATE ZZZ ", update.message)
+    message: str | None = None
+
+    if not update.message.text.startswith("@folker"):
+        message = update.message.text.replace("@folker", "")
 
     response = await chatgpt.chat(
-        prompt_type=ChatGptPrompts.REPLY_SARCASTICALLY, messages=[update.message.text]
+        prompt_type=ChatGptPrompts.REPLY_SARCASTICALLY, messages=[message]
     )
 
     await update.message.reply_text(response)
