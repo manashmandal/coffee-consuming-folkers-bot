@@ -5,7 +5,7 @@ from enum import StrEnum
 
 class ChatGptPrompts(StrEnum):
     REPLY_SARCASTICALLY = "Reply sarcastically to the following text: "
-    BRYLIEFY = "Reply to the following text as an english literature writer like shakespeare but not completely: "
+    BRYLIEFY = "Reply to the following text as a modern english literature writer with complicated words: "
 
 
 @dataclass(frozen=True)
