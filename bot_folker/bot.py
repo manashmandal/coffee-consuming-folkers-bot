@@ -1,4 +1,4 @@
-from bot_folker.settings import Settings, BotCommands
+from bot_folker.settings import Settings, BotCommands, REPLY_IF_CONTAINS
 import logging
 import asyncio
 from bot_folker.chatgpt import ChatGpt, ChatGptPrompts
@@ -45,10 +45,10 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not (update.message and update.message.text):
         return
 
-    message: str | None = None
+    if not update.message.text.startswith(REPLY_IF_CONTAINS):
+        return
 
-    if not update.message.text.startswith("@folker"):
-        message = update.message.text.replace("@folker", "")
+    message = update.message.text.replace(REPLY_IF_CONTAINS, "")
 
     response = await chatgpt.chat(
         prompt_type=ChatGptPrompts.REPLY_SARCASTICALLY, messages=[message]

@@ -2,6 +2,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 from openai import AsyncOpenAI
 from enum import StrEnum
+from typing import Final
+
+REPLY_IF_CONTAINS: Final = "@folker"
 
 
 class BotCommands(StrEnum):
