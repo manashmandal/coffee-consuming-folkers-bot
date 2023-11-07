@@ -1,12 +1,24 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
+from openai import AsyncOpenAI
+from enum import StrEnum
+
+
+class BotCommands(StrEnum):
+    BRYLIEFY = "bryliefy"
 
 
 class Settings(BaseSettings):
     telegram_bot_token: str = Field(default="<TOKEN>", alias="TELEGRAM_BOT_TOKEN")
-    telegram_baseurl: str = Field(default="<TG_BASEURL>", alias="TELEGRAM_BASEURL")
-    openapi_token: str = Field(default="CHATGPT_TOKEN", alias="OPENAPI_TOKEN")
-    openapi_baseurl: str = Field(default="OPENAPI_BASEURL", alias="OPENAPI_BASEURL")
+    openai_token: str = Field(default="CHATGPT_TOKEN", alias="OPENAI_TOKEN")
     bot_name: str = Field(default="Coffee consuming folkers bot", alias="BOT_NAME")
 
+    chatgpt_model_version: str = Field(default="gpt-4", alias="CHATGPT_MODEL_VERSION")
+    chatgpt_temperature: float = Field(default=0.5, alias="CHATGPT_TEMPERATURE")
+    chatgpt_max_tokens: int = Field(default=512, alias="CHATGPT_MAX_TOKENS")
+
     model_config = SettingsConfigDict(env_file=(".env.example", ".env"))
+
+    @property
+    def async_open_ai_client(self) -> AsyncOpenAI:
+        return AsyncOpenAI(api_key=self.openai_token)

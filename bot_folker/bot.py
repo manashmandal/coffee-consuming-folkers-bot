@@ -1,6 +1,7 @@
-from bot_folker.settings import Settings
+from bot_folker.settings import Settings, BotCommands
 import logging
 import asyncio
+from bot_folker.chatgpt import ChatGpt, ChatGptPrompts
 
 from telegram import ForceReply, Update
 from telegram.ext import (
@@ -14,10 +15,11 @@ from telegram.ext import (
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
-logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
 settings = Settings()
+chatgpt = ChatGpt(settings=settings)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -43,7 +45,25 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not (update.message and update.message.text):
         return
 
-    await update.message.reply_text(update.message.text)
+    print("UPDATE ZZZ ", update.message)
+
+    response = await chatgpt.chat(
+        prompt_type=ChatGptPrompts.REPLY_SARCASTICALLY, messages=[update.message.text]
+    )
+
+    await update.message.reply_text(response)
+
+
+async def bryliefy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not (update.message and update.message.text):
+        return
+
+    response = await chatgpt.chat(
+        prompt_type=ChatGptPrompts.BRYLIEFY,
+        messages=[update.message.text],
+    )
+
+    await update.message.reply_text(response)
 
 
 def main() -> None:
@@ -51,6 +71,7 @@ def main() -> None:
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler(BotCommands.BRYLIEFY, bryliefy))
 
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
