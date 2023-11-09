@@ -9,6 +9,8 @@ REPLY_IF_CONTAINS: Final = "@folker"
 
 class BotCommands(StrEnum):
     BRYLIEFY = "bryliefy"
+    FLUTELIFY = "flutelify"
+    REBRYLIEFY = "rebryliefy"
 
 
 class Settings(BaseSettings):

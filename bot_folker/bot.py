@@ -2,8 +2,9 @@ from bot_folker.settings import Settings, BotCommands, REPLY_IF_CONTAINS
 import logging
 import asyncio
 from bot_folker.chatgpt import ChatGpt, ChatGptPrompts
+from typing import Callable, Coroutine, Any, TypedDict
 
-from telegram import ForceReply, Update
+from telegram import ForceReply, Update, Message
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -57,16 +58,28 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(response)
 
 
-async def bryliefy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not (update.message and update.message.text):
-        return
+def generic_command_handler(command: BotCommands):
+    prompt_mapper: TypedDict = {
+        BotCommands.BRYLIEFY: ChatGptPrompts.BRYLIEFY,
+        BotCommands.FLUTELIFY: ChatGptPrompts.FLUTELYFY,
+        BotCommands.REBRYLIEFY: ChatGptPrompts.REBRYLIEFY,
+    }
 
-    response = await chatgpt.chat(
-        prompt_type=ChatGptPrompts.BRYLIEFY,
-        messages=[update.message.text],
-    )
+    async def handler(
+        update: Update, context: ContextTypes.DEFAULT_TYPE
+    ) -> Coroutine[Any, Any, Message]:
+        if not (update.message and update.message.text):
+            return
 
-    await update.message.reply_text(response)
+        response = await chatgpt.chat(
+            prompt_type=prompt_mapper[BotCommands(command)],
+            messages=[update.message.text],
+        )
+
+        await update.message.reply_text(response)
+
+    return handler
+
 
 
 def main() -> None:
@@ -74,7 +87,12 @@ def main() -> None:
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
-    application.add_handler(CommandHandler(BotCommands.BRYLIEFY, bryliefy))
+
+    for command in BotCommands.__members__.values():
+        application.add_handler(
+            CommandHandler(command, generic_command_handler(command))
+        )
+
 
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
