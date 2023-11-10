@@ -61,7 +61,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 def generic_command_handler(command: BotCommands):
     prompt_mapper: TypedDict = {
         BotCommands.BRYLIEFY: ChatGptPrompts.BRYLIEFY,
-        BotCommands.FLUTELIFY: ChatGptPrompts.FLUTELYFY,
+        BotCommands.FLUTELIFY: ChatGptPrompts.FLUTELIFY,
         BotCommands.REBRYLIEFY: ChatGptPrompts.REBRYLIEFY,
     }
 
@@ -81,7 +81,6 @@ def generic_command_handler(command: BotCommands):
     return handler
 
 
-
 def main() -> None:
     application = Application.builder().token(settings.telegram_bot_token).build()
 
@@ -92,7 +91,6 @@ def main() -> None:
         application.add_handler(
             CommandHandler(command, generic_command_handler(command))
         )
-
 
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 

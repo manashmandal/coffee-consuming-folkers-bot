@@ -2,11 +2,12 @@ from dataclasses import dataclass
 from bot_folker.settings import Settings
 from enum import StrEnum
 
+
 class ChatGptPrompts(StrEnum):
     REPLY_SARCASTICALLY = "Reply sarcastically to the following text: "
     BRYLIEFY = "Reply to the following text with complicated words as if you were a modern english literature writer : "
     REBRYLIEFY = "Rewrite the following text with complicated words as if you were a modern english literature writer : "
-    FLUTELYFY = "Reply to the following text as if you were flattering the person no matter what he says: "
+    FLUTELIFY = "Reply to the text as if you flatter the person no matter what they say. You have simple basic English (B1 level). You are not a native speaker, and your vocabulary is not rich at all. You like to use the phrase 'make X great again'. You try to be funny but it sounds cringe-worthy instead. Sometimes you like to show off your knowledge of elementary German. Keep the reply short. Use interjections like 'wow': "
 
 
 @dataclass(frozen=True)
