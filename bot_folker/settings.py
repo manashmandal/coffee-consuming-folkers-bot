@@ -11,6 +11,7 @@ class BotCommands(StrEnum):
     BRYLIEFY = "bryliefy"
     FLUTELIFY = "flutelify"
     REBRYLIEFY = "rebryliefy"
+    UNBRYLIEFY = "unbryliefy"
 
 
 class Settings(BaseSettings):

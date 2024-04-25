@@ -59,10 +59,11 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def generic_command_handler(command: BotCommands):
-    prompt_mapper: TypedDict = {
+    prompt_mapper = {
         BotCommands.BRYLIEFY: ChatGptPrompts.BRYLIEFY,
         BotCommands.FLUTELIFY: ChatGptPrompts.FLUTELIFY,
         BotCommands.REBRYLIEFY: ChatGptPrompts.REBRYLIEFY,
+        BotCommands.UNBRYLIEFY: ChatGptPrompts.UNBRYLIEFY,
     }
 
     async def handler(
